@@ -7,7 +7,7 @@ def GetDistance(a, b):
   return np.sqrt((a[0]-b[0])**2 + (a[1]-b[1])**2)
 
 def ICP_Init():
-  csv = pd.read_csv('point_cloud.csv')
+  csv = pd.read_csv('data/point_cloud.csv')
   # Do I need to handle -inf, inf?
   positions = []
   for position in csv['position']:
@@ -94,7 +94,8 @@ def ICP(A, B, max_iter):
   return transition, rotation, angle
 
 abs_pos, clouds = ICP_Init()
-''' For saving original plots
+'''
+# For saving original plots
 for i in range(len(clouds)):
   RGB = ((255-20*i)/255, 0, 20*i/255)
   for j in range(len(clouds[i])):
@@ -123,8 +124,7 @@ for i in range(len(clouds)):
     newclouds[i] = clouds[i]
     newclouds[i].append([0, 0])
     for j in range(i):
-      newclouds[i] = np.array(np.matmul(rotation[i-j], np.array(newclouds[i]).transpose())).transpose()
-      + transition[i-j]
+      newclouds[i] = np.array(np.matmul(rotation[i-j], np.array(newclouds[i]).transpose())).transpose() + transition[i-j]
   RGB = ((255-20*i)/255, 0, 20*i/255)
   for j in range(len(clouds[i])):
     if j == len(clouds[i])-1:
@@ -132,5 +132,5 @@ for i in range(len(clouds)):
     else:
       plt.plot(newclouds[i][j][0], newclouds[i][j][1], '.', color=RGB)
   plt.plot(abs_pos[i][0], abs_pos[i][1],'ko', fillstyle='none',markeredgewidth=3, markersize=16)
-plt.savefig('ICP.svg')
+plt.savefig('images/ICP.svg')
 plt.show()
